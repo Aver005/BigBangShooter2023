@@ -1,0 +1,9 @@
+name: BigBangShooter
+version: '${project.version}'
+main: kiviuly.bigbangshooter.Main
+api-version: 1.19
+commands:
+  bigbangshooter:
+    aliases:
+      - bbs
+    description: Main command | /bbs help

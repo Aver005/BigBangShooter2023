@@ -13,6 +13,10 @@ public class Arena
     private final String name;
     private final ArenaState state;
 
+    private final int minPlayers = 2;
+    private final int maxPlayers = 32;
+
+    private final int lobbyTimeToStart = 10;
     private final int buyTime = 5;
     private final int plantTime = 5;
     private final int defuseTime = 12;
@@ -53,4 +57,7 @@ public class Arena
     public int getDefuseTime() {return defuseTime;}
     public int getRoundTime() {return roundTime;}
     public int getEndRoundTime() {return endRoundTime;}
+    public int getLobbyTimeToStart() {return lobbyTimeToStart;}
+    public int getMaxPlayers() {return maxPlayers;}
+    public int getMinPlayers() {return minPlayers;}
 }

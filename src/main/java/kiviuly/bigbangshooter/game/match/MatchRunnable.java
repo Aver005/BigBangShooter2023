@@ -1,22 +1,20 @@
 package kiviuly.bigbangshooter.game.match;
 
-import kiviuly.bigbangshooter.game.arena.Arena;
+import kiviuly.bigbangshooter.game.GameStageRunnable;
 
-public class MatchRunnable implements Runnable
+public class MatchRunnable extends GameStageRunnable
 {
     private Match match;
-    private Arena arena;
-    private int seconds = 0;
 
     public MatchRunnable(Match match)
     {
+        super(match);
         this.match = match;
-        this.arena = match.getArena();
     }
 
     @Override
     public void run()
     {
-
+        seconds++;
     }
 }

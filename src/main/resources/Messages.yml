@@ -1,0 +1,11 @@
+Messages:
+  ArenaExists: '§cАрена с таким названием §lУЖЕ §cсуществует'
+  ArenaNotExists: '§cАрена с таким названием §lНЕ §cсуществует'
+  UserAlreadyInThisMatch: '§eВы уже участвуете в этом матче.'
+  UserNotInThisMatch: '§eВы не участвуете в этом матче.'
+  UserAlreadyInThisLobby: '§eВы уже находитесь в этом лобби.'
+  UserNotInThisLobby: '§eВы не находитесь в этом лобби.'
+  LobbyStartInMessage: '§.'
+  LobbyStartInTitleHeader: '§bНачало игры через §d§l{seconds} §bсек...'
+  LobbyStartInTitleFooter: '§6§l***'
+  MatchIsFull: '§eВ данном матче нет свободных мест.'

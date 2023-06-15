@@ -1,13 +1,26 @@
 package kiviuly.bigbangshooter.game.arena;
 
-import java.util.HashMap;
+import kiviuly.bigbangshooter.game.Storage;
 
-public class ArenaStorage
+public class ArenaStorage extends Storage<Arena, String>
 {
-    private static HashMap<String, Arena> arenas = new HashMap<>();
+    private static ArenaStorage instance;
+    public static ArenaStorage getInstance() {return instance;}
 
+    public ArenaStorage(String folderName)
+    {
+        super(folderName);
+        instance = this;
+    }
 
-    public static void add(Arena arena) {arenas.put(arena.getID(), arena);}
-    public static Arena get(String ID) {return arenas.getOrDefault(ID, null);}
-    public static boolean isExists(String ID) {return arenas.containsKey(ID);}
+    @Override
+    public void Add(Arena arena) {getStorage().put(arena.getID(), arena);}
+    @Override
+    public Arena Get(String ID) {return getStorage().getOrDefault(ID, null);}
+
+    @Override
+    public void Load()
+    {
+
+    }
 }

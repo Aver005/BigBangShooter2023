@@ -1,0 +1,24 @@
+Lobby:
+  ChooseTeam:
+    DisplayName: ''
+    Lore:
+      - ''
+      - ''
+      - ''
+    Material: WHITE_BANNER
+  Exit:
+    DisplayName: ''
+    Lore:
+      - ''
+      - ''
+      - ''
+    Material: WHITE_BANNER
+
+Match:
+  ChooseOperator:
+    DisplayName: ''
+    Lore:
+      - ''
+      - ''
+      - ''
+    Material: WHITE_BANNER

@@ -4,10 +4,16 @@ import kiviuly.bigbangshooter.DataManager;
 import kiviuly.bigbangshooter.game.GameStage;
 import kiviuly.bigbangshooter.game.GameStageStorage;
 import kiviuly.bigbangshooter.game.arena.Arena;
+import kiviuly.bigbangshooter.game.match.MatchItem;
 import kiviuly.bigbangshooter.game.user.User;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class Lobby extends GameStage
 {
@@ -18,17 +24,12 @@ public class Lobby extends GameStage
     {
         super(arena);
         this.runnable = new LobbyRunnable(this);
-
-        this.toolBarItems.add(LobbyItems.GetChooseTeamItem());
-        this.toolBarItems.add(LobbyItems.GetExitItem());
-
         getLobbyStorage().add(this);
     }
 
     public void GiveItems(User u)
     {
-        u.getPlayer().getInventory().setItem(0, LobbyItems.GetChooseTeamItem());
-        u.getPlayer().getInventory().setItem(8, LobbyItems.GetExitItem());
+        for(LobbyItem item : LobbyItem.values()) {item.Give(u);}
     }
 
     @Override
@@ -71,6 +72,41 @@ public class Lobby extends GameStage
 
     @Override
     public void Remove() {LobbyStorage.remove(this);}
+
+    @Override
+    public void UserInteractItem(PlayerInteractEvent e, User user)
+    {
+        ItemStack is = e.getItem();
+        if (is == null) {e.setCancelled(true); return;}
+        if (is.equals(LobbyItem.EXIT.getItem())) {Leave(user); return;}
+        if (is.equals(LobbyItem.TEAM.getItem())) {return;}
+        if (is.equals(LobbyItem.OPERATOR.getItem())) {return;}
+        e.setCancelled(true);
+    }
+
+    @Override
+    public void UserJoinServer(PlayerJoinEvent e, User user)
+    {
+
+    }
+
+    @Override
+    public void UserLeaveServer(PlayerQuitEvent e, User user)
+    {
+        Leave(user);
+    }
+
+    @Override
+    public void UserPlaceBlock(BlockPlaceEvent e, User user)
+    {
+        e.setCancelled(true);
+    }
+
+    @Override
+    public void UserBreakBlock(BlockBreakEvent e, User user)
+    {
+        e.setCancelled(true);
+    }
 
     @Override
     public void UserDamagedByUser(EntityDamageByEntityEvent e, User victim, User damager)

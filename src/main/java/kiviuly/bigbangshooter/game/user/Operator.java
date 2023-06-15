@@ -1,10 +1,12 @@
 package kiviuly.bigbangshooter.game.user;
 
+import kiviuly.bigbangshooter.Element;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.ArrayList;
 
-public class Operator
+public class Operator extends Element
 {
     private final String ID;
     private final String name;
@@ -25,6 +27,18 @@ public class Operator
 
         this.kits = new ArrayList<>();
         this.icon = Material.GOLDEN_SWORD;
+    }
+
+    @Override
+    public void Save(YamlConfiguration config)
+    {
+
+    }
+
+    @Override
+    public void Load(YamlConfiguration config)
+    {
+
     }
 
     public String getID() {return ID;}

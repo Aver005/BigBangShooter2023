@@ -6,9 +6,14 @@ import kiviuly.bigbangshooter.game.GameStageStorage;
 import kiviuly.bigbangshooter.game.user.Team;
 import kiviuly.bigbangshooter.game.user.User;
 import kiviuly.bigbangshooter.game.arena.Arena;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +39,11 @@ public class Match extends GameStage
         for(User u : players) {Join(u);}
         runnable.Start();
         getMatchStorage().add(this);
+    }
+
+    public void GiveActionItems(User u)
+    {
+        for(MatchItem item : MatchItem.values()) {item.Give(u);}
     }
 
     public void SpawnUser(User u)
@@ -137,7 +147,45 @@ public class Match extends GameStage
         }
     }
 
-    public boolean isPlaying(User u) {return players.contains(u);}
+    @Override
+    public void UserInteractItem(PlayerInteractEvent e, User user)
+    {
+        ItemStack is = e.getItem();
+        if (is == null) {return;}
+
+        if (status.equals(MatchStatus.BUY_TIME))
+        {
+
+            return;
+        }
+
+        user.getUnit().InteractItem(e);
+    }
+
+    @Override
+    public void UserJoinServer(PlayerJoinEvent e, User user)
+    {
+
+    }
+
+    @Override
+    public void UserLeaveServer(PlayerQuitEvent e, User user)
+    {
+
+    }
+
+    @Override
+    public void UserPlaceBlock(BlockPlaceEvent e, User user)
+    {
+
+    }
+
+    @Override
+    public void UserBreakBlock(BlockBreakEvent e, User user)
+    {
+
+    }
+
     public MatchStatus getStatus() {return status;}
     public ArrayList<User> getPlayersByTeam(Team team) {return playersByTeam.getOrDefault(team, new ArrayList<>());}
     public Team getRandomTeam() {return (Team) playersByTeam.keySet().toArray()[DataManager.getRandom().nextInt(playersByTeam.size())];}

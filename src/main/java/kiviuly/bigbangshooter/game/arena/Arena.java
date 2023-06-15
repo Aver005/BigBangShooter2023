@@ -1,51 +1,71 @@
 package kiviuly.bigbangshooter.game.arena;
 
-import kiviuly.bigbangshooter.DataManager;
+import kiviuly.bigbangshooter.Element;
+import kiviuly.bigbangshooter.game.user.Team;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Arena
+public class Arena extends Element
 {
     private final String ID;
-    private final String name;
-    private final ArenaState state;
+    private String name;
+    private ArenaState state;
 
-    private final int minPlayers = 2;
-    private final int maxPlayers = 32;
+    private int minPlayers = 2;
+    private int maxPlayers = 32;
 
-    private final int lobbyTimeToStart = 10;
-    private final int buyTime = 5;
-    private final int plantTime = 5;
-    private final int defuseTime = 12;
-    private final int roundTime = 120;
-    private final int endRoundTime = 4;
+    private int lobbyTimeToStart = 10;
+    private int buyTime = 5;
+    private int plantTime = 5;
+    private int defuseTime = 12;
+    private int roundTime = 120;
+    private int endRoundTime = 4;
 
-    private final ArrayList<Location> defenseSpawns;
-    private final ArrayList<Location> attackSpawns;
-    private final Location lobby;
+    private Location lobby;
+    private final HashMap<Team, ArrayList<Location>> spawnsByTeam;
 
     private final HashMap<String, Material> plantBlockBySiteName;
-    private final Material bombMaterial;
+    private Material bombMaterial;
 
     public Arena(String ID)
     {
         this.ID = ID;
         this.name = ID;
         this.state = ArenaState.DISABLED;
+        this.lobby = null;
 
-        this.defenseSpawns = new ArrayList<>();
-        this.attackSpawns = new ArrayList<>();
+        this.spawnsByTeam = new HashMap<>();
+        for(Team team : Team.values()) {this.spawnsByTeam.put(team, new ArrayList<>());}
 
         this.bombMaterial = Material.OBSIDIAN;
         this.plantBlockBySiteName = new HashMap<>();
         this.plantBlockBySiteName.put("A", Material.PURPLE_CONCRETE_POWDER);
         this.plantBlockBySiteName.put("B", Material.RED_CONCRETE_POWDER);
 
-        this.lobby = null;
-        ArenaStorage.add(this);
+        ArenaStorage.getInstance().Add(this);
+    }
+
+    public void addSpawn(Team team, Location spawn)
+    {
+        ArrayList<Location> spawns = spawnsByTeam.get(team);
+        spawns.add(spawn);
+        spawnsByTeam.put(team, spawns);
+    }
+
+    @Override
+    public void Save(YamlConfiguration config)
+    {
+
+    }
+
+    @Override
+    public void Load(YamlConfiguration config)
+    {
+
     }
 
     public String getID() {return ID;}
@@ -60,4 +80,9 @@ public class Arena
     public int getLobbyTimeToStart() {return lobbyTimeToStart;}
     public int getMaxPlayers() {return maxPlayers;}
     public int getMinPlayers() {return minPlayers;}
+
+    public void setLobby(Location lobby) {this.lobby = lobby;}
+    public void setState(ArenaState state) {this.state = state;}
+
+    public ArrayList<Location> getSpawns(Team team) {return spawnsByTeam.getOrDefault(team, new ArrayList<>());}
 }

@@ -2,6 +2,7 @@ package kiviuly.bigbangshooter.game.match;
 
 import kiviuly.bigbangshooter.game.user.Operator;
 import kiviuly.bigbangshooter.game.user.User;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class Unit
 {
@@ -14,5 +15,10 @@ public class Unit
         this.owner = owner;
         this.operator = operator;
         this.cost = operator.getSellPrice();
+    }
+
+    public void InteractItem(PlayerInteractEvent e)
+    {
+
     }
 }

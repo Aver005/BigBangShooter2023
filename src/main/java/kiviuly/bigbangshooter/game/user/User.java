@@ -1,15 +1,13 @@
 package kiviuly.bigbangshooter.game.user;
 
 import kiviuly.bigbangshooter.DataManager;
-import kiviuly.bigbangshooter.Main;
+import kiviuly.bigbangshooter.Element;
 import kiviuly.bigbangshooter.game.GameStage;
-import kiviuly.bigbangshooter.game.GameStageStorage;
-import kiviuly.bigbangshooter.game.lobby.Lobby;
-import kiviuly.bigbangshooter.game.match.Match;
-import kiviuly.bigbangshooter.game.match.MatchStatus;
+import kiviuly.bigbangshooter.game.arena.Arena;
 import kiviuly.bigbangshooter.game.match.Unit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -22,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class User
+public class User extends Element
 {
     private final Player player;
 
@@ -30,6 +28,7 @@ public class User
 
     private Unit unit;
     private GameStage gameStage;
+    private Arena editArena = null;
     private Team team = Team.NONE;
 
     private double lobbyDamage = 0.0f;
@@ -41,7 +40,19 @@ public class User
     {
         this.player = player;
         this.units = new ArrayList<>();
-        UserStorage.add(this);
+        UserStorage.getInstance().Add(this);
+    }
+
+    @Override
+    public void Save(YamlConfiguration config)
+    {
+
+    }
+
+    @Override
+    public void Load(YamlConfiguration config)
+    {
+
     }
 
     public void SavePlayer()
@@ -130,6 +141,9 @@ public class User
     public void addAbsorbedDamage(double damage) {absorbedDamage += damage;}
     public void setAbsorbedDamage(double damage) {absorbedDamage = damage;}
 
+    public Unit getUnit() {return unit;}
+    public void setUnit(Unit unit) {this.unit = unit;}
+
     public Player getPlayer() {return player;}
     public String getName() {return player.getName();}
     public Team getTeam() {return team;}
@@ -138,4 +152,10 @@ public class User
     public void setGameStage(GameStage gameStage) {this.gameStage = gameStage;}
     public boolean isSpectating() {return isSpectating;}
     public void setSpectating(boolean isSpectating) {this.isSpectating = isSpectating;}
+    public Arena getEditArena() {return editArena;}
+    public void setEditArena(Arena editArena) {this.editArena = editArena;}
+    public boolean isEditing() {return editArena != null;}
+
+    @Override
+    public String getID() {return player.getName();}
 }

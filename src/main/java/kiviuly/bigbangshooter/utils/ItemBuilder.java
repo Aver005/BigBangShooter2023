@@ -22,6 +22,10 @@ public class ItemBuilder {
         stack = new ItemStack(mat);
     }
 
+    public ItemBuilder(ItemStack is) {
+        stack = is.clone();
+    }
+
     public ItemBuilder(Material mat, short sh) {
         stack = new ItemStack(mat, 1, sh);
     }
@@ -104,6 +108,7 @@ public class ItemBuilder {
     public ItemBuilder addLore(String line)
     {
         List<String> loreList = getItemMeta().getLore();
+        if (loreList == null) {loreList = new ArrayList<>();}
         loreList.add(line);
         ItemMeta meta = getItemMeta();
         meta.setLore(loreList);

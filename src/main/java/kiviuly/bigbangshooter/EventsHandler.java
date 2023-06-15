@@ -1,8 +1,12 @@
 package kiviuly.bigbangshooter;
 
 import kiviuly.bigbangshooter.game.GameStage;
+import kiviuly.bigbangshooter.game.arena.EditItem;
+import kiviuly.bigbangshooter.game.arena.EditItemStorage;
 import kiviuly.bigbangshooter.game.user.User;
 import kiviuly.bigbangshooter.game.user.UserStorage;
+
+import org.bukkit.event.EventHandler;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -12,7 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class EventsHandler implements Listener
@@ -21,41 +25,62 @@ public class EventsHandler implements Listener
     public void OnPlayerJoin(PlayerJoinEvent e)
     {
         Player p = e.getPlayer();
-        User u = UserStorage.get(p);
+        User u = UserStorage.getInstance().Get(p.getName());
+        if (u.getGameStage() == null) {return;}
+        u.getGameStage().UserJoinServer(e, u);
+    }
+
+    @EventHandler
+    public void OnPlayerQuit(PlayerQuitEvent e)
+    {
+        Player p = e.getPlayer();
+        User u = UserStorage.getInstance().Get(p.getName());
+        if (u.getGameStage() == null) {return;}
+        u.getGameStage().UserLeaveServer(e, u);
     }
 
     @EventHandler
     public void OnPlayerUseItemStack(PlayerInteractEvent e)
     {
         Player p = e.getPlayer();
-        User u = UserStorage.get(p);
-        ItemStack is = p.getItemInUse();
+        User u = UserStorage.getInstance().Get(p.getName());
 
-        /*
-            TODO: Возможно стоит подумать над тем
-                  Что у каждого GameStage есть своё меню
-                  У Match - выбор опера
-                  У Lobby - выбор команды
+        if (u.isEditing())
+        {
+            ItemStack is = e.getItem();
+            if (!EditItemStorage.IsEditItem(is, u.getEditArena())) {return;}
+            EditItemStorage.GetEditByItem(is).onUse(u, e);
+            return;
+        }
 
-        */
+        if (u.getGameStage() == null) {return;}
+        u.getGameStage().UserInteractItem(e, u);
     }
 
     @EventHandler
     public void OnBlockBreak(BlockBreakEvent e)
     {
-        User u = UserStorage.get(e.getPlayer());
+        User u = UserStorage.getInstance().Get(e.getPlayer().getName());
         if (u.getGameStage() == null) {return;}
-
-        e.setCancelled(true);
+        u.getGameStage().UserBreakBlock(e, u);
     }
 
     @EventHandler
     public void OnBlockPlace(BlockPlaceEvent e)
     {
-        User u = UserStorage.get(e.getPlayer());
-        if (u.getGameStage() == null) {return;}
+        Player p = e.getPlayer();
+        User u = UserStorage.getInstance().Get(p.getName());
 
-        e.setCancelled(true);
+        if (u.isEditing())
+        {
+            ItemStack is = p.getItemInUse();
+            if (!EditItemStorage.IsEditItem(is, u.getEditArena())) {return;}
+            EditItemStorage.GetEditByItem(is).onPlace(u, e);
+            return;
+        }
+
+        if (u.getGameStage() == null) {return;}
+        u.getGameStage().UserPlaceBlock(e, u);
     }
 
     @EventHandler
@@ -63,13 +88,13 @@ public class EventsHandler implements Listener
     {
         if (!e.getEntityType().equals(EntityType.PLAYER)) {return;}
 
-        User victim = UserStorage.get((Player) e.getEntity());
+        User victim = UserStorage.getInstance().Get(((Player) e.getEntity()).getName());
         GameStage stage = victim.getGameStage();
         if (stage == null) {return;}
 
         if (e.getDamager().getType().equals(EntityType.PLAYER))
         {
-            User damager = UserStorage.get((Player) e.getDamager());
+            User damager = UserStorage.getInstance().Get(((Player) e.getDamager()).getName());
 
             if (stage.equals(damager.getGameStage()))
             {
@@ -87,7 +112,7 @@ public class EventsHandler implements Listener
         if (!e.getEntityType().equals(EntityType.PLAYER)) {return;}
         if (e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {return;}
 
-        User u = UserStorage.get((Player) e.getEntity());
+        User u = UserStorage.getInstance().Get(((Player) e.getEntity()).getName());
         GameStage stage = u.getGameStage();
         if (stage == null) {return;}
 

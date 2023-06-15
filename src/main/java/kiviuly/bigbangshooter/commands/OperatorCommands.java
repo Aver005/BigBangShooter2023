@@ -1,8 +1,8 @@
 package kiviuly.bigbangshooter.commands;
 
-import org.bukkit.entity.Player;
+import kiviuly.bigbangshooter.game.user.User;
 
 public class OperatorCommands extends Commands
 {
-    public OperatorCommands(Player p, String[] args) {super(p, args);}
+    public OperatorCommands(User user, String[] args) {super(user, args);}
 }

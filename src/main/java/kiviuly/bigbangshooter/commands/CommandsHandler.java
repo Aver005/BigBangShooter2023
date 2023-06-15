@@ -1,5 +1,7 @@
 package kiviuly.bigbangshooter.commands;
 
+import kiviuly.bigbangshooter.game.user.User;
+import kiviuly.bigbangshooter.game.user.UserStorage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +15,7 @@ public class CommandsHandler implements CommandExecutor
         if (!(sender instanceof Player)) {return true;}
 
         Player p = (Player) sender;
+        User user = UserStorage.getInstance().Get(p.getName());
         int count = args.length;
 
         if (count == 0)
@@ -24,13 +27,13 @@ public class CommandsHandler implements CommandExecutor
 
         if (sub.equals("arena"))
         {
-            new ArenasCommands(p, args);
+            new ArenasCommands(user, args);
             return true;
         }
 
         if (sub.equals("op") || sub.equals("operator"))
         {
-            new OperatorCommands(p, args);
+            new OperatorCommands(user, args);
             return true;
         }
 

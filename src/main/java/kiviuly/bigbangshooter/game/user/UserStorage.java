@@ -1,19 +1,32 @@
 package kiviuly.bigbangshooter.game.user;
 
-import org.bukkit.entity.Player;
+import kiviuly.bigbangshooter.game.Storage;
+import org.bukkit.Bukkit;
 
-import java.util.HashMap;
-
-public class UserStorage
+public class UserStorage extends Storage<User, String>
 {
-    private static HashMap<String, User> users = new HashMap<>();
+    private static UserStorage instance;
+    public static UserStorage getInstance() {return instance;}
 
-
-    public static void add(User user) {users.put(user.getName(), user);}
-
-    public static User get(Player pl)
+    public UserStorage(String folderName)
     {
-        if (users.containsKey(pl.getName())) {return users.get(pl.getName());}
-        return new User(pl);
+        super(folderName);
+        instance = this;
+    }
+
+    @Override
+    public void Add(User user) {getStorage().put(user.getName(), user);}
+
+    @Override
+    public User Get(String plName)
+    {
+        if (getStorage().containsKey(plName)) {return getStorage().get(plName);}
+        return new User(Bukkit.getPlayer(plName));
+    }
+
+    @Override
+    public void Load()
+    {
+
     }
 }
